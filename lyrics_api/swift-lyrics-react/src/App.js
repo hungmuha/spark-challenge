@@ -3,14 +3,15 @@ import logo from './logo.svg';
 import DisplayTable from './components/DisplayTable';
 import SearchBar from './components/SearchBar';
 import SizeSelection from './components/SizeSelection';
+import useCustomLocalStateHook from './hooks/persistentState';
 import utils from './utils';
 import './App.css';
 import axios from 'axios';
 
 function App() {
-  const [pageSize, setPageSize] = useState(25);
+  const [pageSize, setPageSize] = useCustomLocalStateHook('savedSize',25);
   const [lyrics, setLyricList] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useCustomLocalStateHook('savedTerm','');
 
   //memoized Callback is reusable
   const handleFetch = useCallback(() => {
@@ -27,6 +28,7 @@ function App() {
   }, [pageSize, searchTerm]);
 
   useEffect(() => {
+    //side effect on change of callback
     handleFetch();
   },[handleFetch]);
 
